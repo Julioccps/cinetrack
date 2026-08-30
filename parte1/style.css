@@ -1,0 +1,35 @@
+:root {
+    --lavender: #eae8ffff;
+    --alabaster-grey: #d8d5dbff;
+    --pale-slate: #adacb5ff;
+    --jet-black: #2d3142ff;
+    --icy-blue: #b0d7ffff;
+		--font-main: "Inter", sans-serif;
+}
+
+button {
+	background-color: var(--icy-blue);
+	border-radius: 4px;
+}
+
+text {
+	font-family: var(--font-main);
+}
+body {
+  background-color: var(--pale-slate);
+}
+header {
+  background-color: var(--alabaster-grey);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  align-items: center;
+}
+header input {
+  flex: 1 1 240px;
+  height: 2.2rem;
+}
+header button {
+  height: 2.2rem;
+}
