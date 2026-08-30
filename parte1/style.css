@@ -33,3 +33,23 @@ header input {
 header button {
   height: 2.2rem;
 }
+section#lista{
+  display: flex;
+  flex-direction: row;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 200px;
+  border-radius: 10px;
+  background-color: var(--lavender);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+main img {
+  border-radius: 10px;
+  width: auto;
+  height: 250px;
+}
