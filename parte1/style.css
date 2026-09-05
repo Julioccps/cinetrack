@@ -17,6 +17,7 @@
   --card-bg: var(--lavender);
   --text: var(--jet-black);
   --accent: var(--icy-blue);
+  --hyperlink: #3763c9;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,6 +27,7 @@
     --card-bg: #2f3242;
     --text: #eae8ff;
     --accent: #3d6fa8;
+    --hyperlink: #7fb0e8;
   }
 }
 
@@ -262,4 +264,8 @@ footer {
     max-width: 1600px;
     margin: 0 auto;
   }
+}
+
+a {
+  color: var(--hyperlink)
 }
