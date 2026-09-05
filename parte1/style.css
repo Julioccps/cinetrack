@@ -60,12 +60,27 @@ button {
   transition: opacity 0.2s ease, transform 0.1s ease;
 }
 
+nav button.ativo {
+  background: var(--jet-black); /* fundo com a cor primária */
+  color: white;                 /* texto branco */
+}
 button:hover {
   opacity: 0.85;
+  background: rgb(123, 187, 252) ;
 }
 
 button:active {
   transform: scale(0.98);
+  background: rgb(84, 169, 255);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:focus-visible {
+  outline: 3px solid rgb(17, 134, 250);
 }
 
 section#lista {
@@ -140,6 +155,47 @@ section#lista > br {
 
 .card > section button:last-of-type {
   width: calc(50% - 4px);
+}
+
+input:required {
+  border-left: 3px solid #c0392b;
+}
+
+input:invalid {
+  border-color: #c0392b;
+}
+
+input:valid {
+  border-color: #2e7d32;
+}
+
+.filtro:checked + label {
+  font-weight: 700;
+}
+
+.badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.badge.assistido {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.badge.assistindo {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.badge.quero {
+  background-color: #cfe2ff;
+  color: #084298;
 }
 
 img .rascunho {
