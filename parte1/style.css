@@ -178,7 +178,9 @@ section#lista > br {
 .card > section button:last-of-type {
   width: calc(50% - 4px);
 }
-
+input {
+  border-radius: 5px;
+}
 input:required {
   border-left: 3px solid #c0392b;
 }
@@ -190,7 +192,19 @@ input:invalid {
 input:valid {
   border-color: #2e7d32;
 }
+textarea {
+  border-radius: 5px;
+}
+form {
+  display: flex;
+  justify-content: center;
+}
 
+form > div :not(button)  {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 .filtro:checked + label {
   font-weight: 700;
 }
