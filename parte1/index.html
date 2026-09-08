@@ -24,7 +24,54 @@
             <button aria-pressed="false">Quero assistir</button>
         </nav>
     </header>
-    
+    <div id="modal" hidden>
+        <div class="modal-conteudo">
+            <h1>Adicionar Filme</h1>
+            <form id="form-filme">
+            <div>
+                <div class="campo">
+                    <label>Titulo
+                    <input required></label>
+                </div>
+                <div class="campo">
+                    <label>Ano
+                    <input type="number" min="1888" max="2030" required>
+                    </label>
+                </div>
+                <div class="campo">
+                    <label>Gênero
+                    <input required></label>
+                </div>
+                <div class="campo">
+                    <label>URL do pôster
+                    <input></label>
+                </div>
+                <div class="campo">
+                    <label>Status
+                        <select required>
+                            <option>Quero Assistir</option>
+                            <option>Assistindo</option>
+                            <option>Assistido</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="campo">
+                    <label>Nota (1 a 5)
+                    <input type="number" min="1" max="5">
+                    </label>
+                </div>
+                <div class="campo">
+                    <label>Comentário
+                    <textarea placeholder="Insira comentário" rows="4" cols="25"></textarea></label>
+                </div>
+                <div class="acoes">
+                    <button type="button">Cancelar</button>
+                    <button type="submit">Salvar</button>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <main>
         <section id="lista" aria-live="polite">
             <article class="card">
