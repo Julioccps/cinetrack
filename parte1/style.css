@@ -288,6 +288,11 @@ footer {
   color: var(--text);
 }
 
+footer a {
+  display:block;
+  margin-top: 0.5rem;
+}
+
 @media (max-width: 480px) {
   header {
     margin: 0.5rem;
