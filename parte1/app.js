@@ -1,11 +1,25 @@
-const TOTAL = 6;
-const ASSISTIDOS = 3;
-const ASSISTINDO = 1;
-const QUERO = 2;
+function rotuloStatus(status) {
+    if (status === 'assistido') {
+        return 'Assistido';
+    }
+    if (status === 'assistindo') {
+        return 'Assistindo';
+    }
+    if (status === 'quero') {
+        return 'Quero assistir';
+    }
+}
 
-document.querySelector("nav button:nth-child(1)").textContent = `Todos (${TOTAL})`;
-document.querySelector("nav button:nth-child(2)").textContent = `Assistidos (${ASSISTIDOS})`;
-document.querySelector("nav button:nth-child(3)").textContent = `Assistindo (${ASSISTINDO})`;
-document.querySelector("nav button:nth-child(4)").textContent = `Quero assistir (${QUERO})`;
+const estrela = (nota) => {
+    let resultado = ""; 
+    for (let i = 1; i <= 5; i++) {
+        resultado += (i <= nota) ? "★" : "☆";
+    }
+    return resultado;
+};
 
-document.querySelector("footer small").textContent = `Cinetrack © 2026 · ${TOTAL} filmes cadastrados`;
+const primeiroCard = document.querySelector('.card');
+if (primeiroCard) {
+    primeiroCard.querySelector(".badge").textContent = rotuloStatus("assistido");
+    primeiroCard.querySelector("#nota").innerHTML = `Nota: ${estrela(4)}`;
+}
