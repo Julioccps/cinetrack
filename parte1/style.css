@@ -126,6 +126,7 @@ section#lista > br {
   flex-direction: column;
   padding: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  break-inside: avoid;
 }
 
 .card img {
@@ -363,4 +364,12 @@ a {
   width: 100%;
   max-width: 420px;
   max-height: 90vh;
+}
+
+@media print {
+  input,
+  footer,
+  button {
+    display: none !important;
+  }
 }
