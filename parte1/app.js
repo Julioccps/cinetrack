@@ -18,7 +18,6 @@ const estrelas = (nota) => {
     }
     return resultado;
 };
-const estrela = estrelas;
 
 const filmesIniciais = [
     {
