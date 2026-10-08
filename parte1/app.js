@@ -88,20 +88,42 @@ function renderizarCards(lista) {
 
     listaElemento.innerHTML = lista.map((filme) => `
         <article class="card" data-id="${filme.id}">
-            <img src="${filme.poster}" width="200px" alt="Poster do filme: '${filme.titulo}'">
+            <img src="${filme.poster}" alt="Poster do filme: '${filme.titulo}'">
             <h2>${filme.titulo}</h2>
             <p>${filme.ano} · ${filme.genero}</p>
             <p>Nota: ${estrelas(filme.nota)}</p>
             <section>
                 <span class="badge ${filme.status}">${rotuloStatus(filme.status)}</span>
-                <button>Editar</button>
-                <button>Remover</button>
+                <button class="btn-editar">Editar</button>
+                <button class="btn-remover">Remover</button>
             </section>
         </article>
     `).join("");
 }
 
-renderizarCards(filmesIniciais);
+let filmes = [...filmesIniciais];
+renderizarCards(filmes);
+
+const listaElemento = document.getElementById("lista");
+listaElemento.addEventListener("click", (event) => {
+    const botaoRemover = event.target.closest(".btn-remover");
+    if (!botaoRemover) return;
+    if (!confirm("Tem certeza que deseja remover este filme?")) return;
+    const card = botaoRemover.closest(".card");
+    const idFilme = parseInt(card.dataset.id, 10);
+    filmes = filmes.filter(filme => filme.id !== idFilme);
+    renderizarCards(filmes);
+});
+
+const nav = document.querySelector("nav");
+nav.addEventListener("click", (event) => {
+    const botaoFiltro = event.target.closest("button");
+    if (!botaoFiltro) return;
+    nav.querySelector(".ativo").classList.remove("ativo");
+    botaoFiltro.classList.add("ativo");
+    const statusFiltro = botaoFiltro.dataset.status;
+    renderizarCards(statusFiltro === "todos" ? filmes : filmes.filter(filme => filme.status === statusFiltro));
+});
 
 const rodape = document.querySelector("footer small");
 if (rodape) {
