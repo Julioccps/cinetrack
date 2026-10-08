@@ -112,7 +112,7 @@ listaElemento.addEventListener("click", (event) => {
     const card = botaoRemover.closest(".card");
     const idFilme = parseInt(card.dataset.id, 10);
     filmes = filmes.filter(filme => filme.id !== idFilme);
-    renderizarCards(filmes);
+    atualizarTela();
 });
 
 const nav = document.querySelector("nav");
@@ -121,11 +121,79 @@ nav.addEventListener("click", (event) => {
     if (!botaoFiltro) return;
     nav.querySelector(".ativo").classList.remove("ativo");
     botaoFiltro.classList.add("ativo");
-    const statusFiltro = botaoFiltro.dataset.status;
-    renderizarCards(statusFiltro === "todos" ? filmes : filmes.filter(filme => filme.status === statusFiltro));
+    atualizarTela();
 });
 
-const rodape = document.querySelector("footer small");
-if (rodape) {
-    rodape.textContent = `Cinetrack © 2026 · ${filmesIniciais.length} filmes cadastrados`;
+function atualizarTela() {
+    const statusFiltro = nav.querySelector(".ativo").dataset.status;
+    renderizarCards(statusFiltro === "todos" ? filmes : filmes.filter(filme => filme.status === statusFiltro));
+    const rodape = document.querySelector("footer small");
+    if (rodape) {
+        rodape.textContent = `Cinetrack © 2026 · ${filmes.length} filmes cadastrados`;
+    }
 }
+
+let editandoId = null;
+const modal = document.querySelector("#modal");
+const form = document.querySelector("#form-filme");
+const adicionar = document.querySelector("#adicionar");
+const cancelar = document.querySelector("#cancelar");
+const tituloModal = modal.querySelector("h1");
+const abrir = () => {
+    tituloModal.textContent = editandoId !== null ? "Editar Filme" : "Adicionar Filme";
+    modal.hidden = false;
+};
+const fechar = () => modal.hidden = true;
+
+adicionar.addEventListener("click", () => {
+        editandoId = null;
+        form.reset();
+        abrir();
+});
+
+listaElemento.addEventListener("click", (event) => {
+    const botaoEditar = event.target.closest(".btn-editar");
+    if (!botaoEditar) return;
+    const card = botaoEditar.closest(".card");
+    editandoId = Number(card.dataset.id);
+    const filme = filmes.find(f => f.id === editandoId);
+    form.elements.titulo.value = filme.titulo;
+    form.elements.ano.value = filme.ano;
+    form.elements.genero.value = filme.genero;
+    form.elements.poster.value = filme.poster;
+    form.elements.status.value = filme.status;
+    form.elements.nota.value = filme.nota;
+    form.elements.comentario.value = filme.comentario;
+    abrir();
+});
+
+const gerarId = (lista) => Math.max(0, ...lista.map((f) => f.id)) + 1;
+
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const dados = Object.fromEntries(new FormData(form));
+    dados.titulo = dados.titulo.trim();
+    dados.genero = dados.genero.trim();
+    dados.ano = Number(dados.ano);
+    dados.nota = Number(dados.nota);
+    if (!dados.titulo || !dados.genero) return;
+
+    if (editandoId !== null) {
+        filmes = filmes.map(f => f.id === editandoId ? { ...f, ...dados } : f);
+    } else {
+        filmes = [...filmes, { id: gerarId(filmes), ...dados }];
+    }
+    atualizarTela();
+    fechar();
+});
+
+cancelar.addEventListener("click", () =>{
+    fechar();
+});
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.hidden){
+        fechar();
+    }
+});
+
+atualizarTela();
