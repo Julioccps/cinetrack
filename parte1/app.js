@@ -1,3 +1,9 @@
+let termoAtual = ""
+let statusAtual = "todos"
+
+const CHAVE = "cinetrack:filmes";
+
+
 function rotuloStatus(status) {
     if (status === 'assistido') {
         return 'Assistido';
@@ -82,9 +88,46 @@ const filmesIniciais = [
     }
 ];
 
-let filmes = [...filmesIniciais];
+let filmes = carregar();
 const listaElemento = document.getElementById("lista");
 const nav = document.querySelector("nav");
+
+function debounce(fn, ms = 300){
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), ms);
+    };
+}
+
+const salvar = () =>
+    localStorage.setItem(CHAVE, JSON.stringify(filmes));
+
+
+
+const busca = document.querySelector("header input");
+
+const aoDigitar = (e) => {
+    termoAtual = e.target.value;
+    atualizarTela();
+};
+
+busca.addEventListener("input", debounce(aoDigitar, 300));
+
+function carregar() {
+    const txt = localStorage.getItem(CHAVE);
+    return txt 
+    ? JSON.parse(txt)
+    : [...filmesIniciais];
+}
+
+function aplicarFiltros(lista, opcoes){
+    const termo = opcoes.termo.toLowerCase();
+    return lista.filter((f) =>
+        f.titulo.toLowerCase().includes(termo))
+    .filter((f) => opcoes.status === "todos" || 
+        f.status === opcoes.status);
+}
 
 function gerarId(lista) {
     return Math.max(0, ...lista.map((f) => f.id)) + 1;
@@ -149,6 +192,7 @@ function event_click() {
             const card = botaoRemover.closest(".card");
             const idFilme = parseInt(card.dataset.id, 10);
             filmes = filmes.filter(filme => filme.id !== idFilme);
+            salvar();
             atualizarTela();
             atualizaRodape();
             return;
@@ -177,13 +221,15 @@ function atualizaFiltro() {
         if (!botaoFiltro) return;
         nav.querySelector(".ativo").classList.remove("ativo");
         botaoFiltro.classList.add("ativo");
+        statusAtual = botaoFiltro.dataset.status;
         atualizarTela();
     });
 }
 
 function atualizarTela() {
-    const statusFiltro = nav.querySelector(".ativo").dataset.status;
-    renderizarCards(statusFiltro === "todos" ? filmes : filmes.filter(filme => filme.status === statusFiltro));
+    const visiveis = aplicarFiltros(filmes,
+        { termo: termoAtual, status: statusAtual });
+        renderizarCards(visiveis);
 }
 
 function validarFilme(filme) {
@@ -252,6 +298,7 @@ function configuraModal() {
         atualizarTela();
         atualizaRodape();
         fechar();
+        salvar();
     });
 }
 
