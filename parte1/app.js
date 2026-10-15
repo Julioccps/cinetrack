@@ -237,8 +237,17 @@ function validarFilme(filme) {
     if (!filme.titulo) {
         erros.push("O título do filme é obrigatório!");
     }
-    if (filme.ano < 1888 || filme.ano > 2030) {
+    if (!filme.genero) {
+        erros.push("O gênero do filme é obrigatório!");
+    }
+    if (!Number.isInteger(filme.ano) || filme.ano < 1888 || filme.ano > 2030) {
         erros.push("Ano inválido!");
+    }
+    if (!["quero", "assistindo", "assistido"].includes(filme.status)) {
+        erros.push("Selecione um status válido!");
+    }
+    if (filme.nota !== null && (!Number.isInteger(filme.nota) || filme.nota < 1 || filme.nota > 5)) {
+        erros.push("A nota deve ser um número inteiro entre 1 e 5!");
     }
     return { valido: erros.length === 0, erros };
 }
@@ -282,7 +291,7 @@ function configuraModal() {
         dados.titulo = dados.titulo.trim();
         dados.genero = dados.genero.trim();
         dados.ano = Number(dados.ano);
-        dados.nota = Number(dados.nota);
+        dados.nota = dados.nota === "" ? null : Number(dados.nota);
 
         const validacao = validarFilme(dados);
         if (!validacao.valido) {
