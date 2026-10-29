@@ -1,12 +1,22 @@
-function Filtros() {
+const STATUS = [
+    {valor: "todos", rotulo: "Todos"},
+    {valor: "assistido", rotulo: "Assistido"},
+    {valor: "assistindo", rotulo: "Assistindo"},
+    {valor: "quero", rotulo: "Quero assistir"}
+];
+
+export default function Filtros({ativo, aoMudar}) {
     return (
         <nav aria-label="Filtros de Status">
-            <button class="ativo" data-status="todos" aria-pressed="true">Todos</button>
-            <button data-status="assistido" aria-pressed="false">Assistido</button>
-            <button data-status="assistindo" aria-pressed="false">Assistindo</button>
-            <button data-status="quero" aria-pressed="false">Quero assistir</button>
+            {STATUS.map((s) => (
+                <button
+                 key={s.valor}
+                 className={ativo === s.valor ? "ativo" : ""}
+                 onClick={() => aoMudar(s.valor)}
+                >
+                    {s.rotulo}
+                </button>
+            ))}
         </nav>
     );
 }
-
-export default Filtros;
