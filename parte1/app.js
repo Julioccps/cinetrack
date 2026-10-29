@@ -1,5 +1,6 @@
 let termoAtual = ""
 let statusAtual = "todos"
+let filtroAtual = "titulo"
 
 const CHAVE = "cinetrack:filmes";
 
@@ -91,6 +92,12 @@ const filmesIniciais = [
 let filmes = carregar();
 const listaElemento = document.getElementById("lista");
 const nav = document.querySelector("nav");
+const ordenar = document.getElementById("ordenar");
+
+ordenar.addEventListener("change", (event) => {
+    filtroAtual = event.target.value;
+    atualizarTela();
+});
 
 function debounce(fn, ms = 300){
     let timer;
@@ -229,7 +236,12 @@ function atualizaFiltro() {
 function atualizarTela() {
     const visiveis = aplicarFiltros(filmes,
         { termo: termoAtual, status: statusAtual });
-        renderizarCards(visiveis);
+    visiveis.sort((a, b) => {
+        if (filtroAtual === "ano") return b.ano - a.ano;
+        if (filtroAtual === "nota") return (b.nota ?? 0) - (a.nota ?? 0);
+        return a.titulo.localeCompare(b.titulo, "pt-BR");
+    });
+    renderizarCards(visiveis);
 }
 
 function validarFilme(filme) {

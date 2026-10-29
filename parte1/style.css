@@ -69,8 +69,38 @@ header input[type="search"] {
 
 header nav {
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+#ordenar {
+  background-color: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--pale-slate);
+  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+#ordenar:hover {
+  background-color: var(--surface);
+  border-color: var(--hyperlink);
+}
+
+#ordenar:focus-visible {
+  outline: 3px solid var(--hyperlink);
+  outline-offset: 2px;
+}
+
+#ordenar option {
+  background-color: var(--card-bg);
+  color: var(--text);
 }
 
 button {
