@@ -8,10 +8,14 @@ const ROTULOS = {
     quero: "Quero assistir"
 };
 
-export default function cardFilmes({filme, aoEditar, aoRemover}) {
+export default function CardFilme({filme, aoEditar, aoRemover}) {
+    const posterUrl =
+        filme.poster ||
+        `https://placehold.co/200x300?text=${encodeURIComponent(filme.titulo)}`;
+
     return (
         <article className="card">
-            <img src={filme.poster} alt={`Poster do filme: '${filme.titulo}'`} />
+            <img src={posterUrl} alt={`Poster do filme: '${filme.titulo}'`} />
             <h2>{filme.titulo}</h2>
             <p>{filme.ano} · {filme.genero}</p>
             <p>Nota: {estrelas(filme.nota)}</p>
@@ -20,12 +24,11 @@ export default function cardFilmes({filme, aoEditar, aoRemover}) {
                     {ROTULOS[filme.status]}
                 </span>
                 
-                <div id="acoes">
+                <div className="acoes">
                     <button className="btn-editar" onClick={() => aoEditar(filme)}>Editar</button>
                     <button className="btn-remover" onClick={() => aoRemover(filme.id)}>Remover</button>
                 </div>
             </section>
-
         </article>
     );
 }
