@@ -80,6 +80,7 @@ export default function App() {
                 aoAdicionar={() => setEditando({})}
             >
                 <Filtros ativo={status} aoMudar={setStatus}/>
+                <p>Exibindo {visiveis.length} de {filmes.length} filmes</p>
             </Header>
 
             <main>{conteudo}</main>

@@ -1,12 +1,5 @@
-function estrelas(nota) {
-    return "★".repeat(nota) + "☆".repeat(5 - nota);
-}
-
-const ROTULOS = {
-    assistido: "Assistido",
-    assistindo: "Assistindo",
-    quero: "Quero assistir"
-};
+import Estrelas from "./Estrelas.jsx";
+import Badge from "./Badge.jsx";
 
 export default function CardFilme({filme, aoEditar, aoRemover}) {
     const posterUrl =
@@ -18,11 +11,9 @@ export default function CardFilme({filme, aoEditar, aoRemover}) {
             <img src={posterUrl} alt={`Poster do filme: '${filme.titulo}'`} />
             <h2>{filme.titulo}</h2>
             <p>{filme.ano} · {filme.genero}</p>
-            <p>Nota: {estrelas(filme.nota)}</p>
+            <p>Nota: <Estrelas nota={filme.nota} /></p>
             <section>
-                <span className={`badge ${filme.status}`}>
-                    {ROTULOS[filme.status]}
-                </span>
+                <Badge status={filme.status} />
                 
                 <div className="acoes">
                     <button className="btn-editar" onClick={() => aoEditar(filme)}>Editar</button>
