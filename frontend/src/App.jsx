@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { gerarId } from "./data/filmes.js";
-import { listar } from "./api.js";
+import { listar, criar, atualizar, remover } from "./api.js";
 import Header from "./components/Header.jsx";
 import ListaFilmes from "./components/ListaFilmes.jsx";
 import Filtros from "./components/Filtros.jsx";
@@ -23,32 +22,6 @@ function lerFiltrosSalvos() {
     }
 }
 
-function adicionar(setFilmes, novoFilme) {
-    setFilmes((anteriores) => [
-        ...anteriores,
-        { ...novoFilme, id: gerarId(anteriores) },
-    ]);
-}
-
-function remover(setFilmes, id) {
-    setFilmes((anteriores) => anteriores.filter((f) => f.id !== id));
-}
-
-function editar(setFilmes, id, alteracoes) {
-    setFilmes((anteriores) =>
-        anteriores.map((f) => (f.id === id ? { ...f, ...alteracoes, id } : f))
-    );
-}
-
-function salvar(editando, setFilmes, setEditando, dados) {
-    if (editando.id) {
-        editar(setFilmes, editando.id, dados);
-    } else {
-        adicionar(setFilmes, dados);
-    }
-    setEditando(null);
-}
-
 export default function App() {
     const [filmes, setFilmes] = useState([]);
     const [carregando, setCarregando] = useState(true);
@@ -56,6 +29,8 @@ export default function App() {
     const [status, setStatus] = useState(() => lerFiltrosSalvos().status);
     const [busca, setBusca] = useState(() => lerFiltrosSalvos().busca);
     const [editando, setEditando] = useState(null);
+    const [salvando, setSalvando] = useState(false);
+    const [erroOperacao, setErroOperacao] = useState(null);
     
     const visiveis = filmes
         .filter((filme) => status === "todos" || filme.status === status)
@@ -81,6 +56,44 @@ export default function App() {
         );
     }, [busca, status]);
 
+    function abrirModal(filme) {
+        setErroOperacao(null);
+        setEditando(filme);
+    }
+
+    async function salvar(dados) {
+        setSalvando(true);
+        setErroOperacao(null);
+
+        try {
+            if (editando.id) {
+                const atualizado = await atualizar(editando.id, dados);
+                setFilmes((anteriores) => anteriores.map((filme) =>
+                    filme.id === atualizado.id ? atualizado : filme
+                ));
+            } else {
+                const criado = await criar(dados);
+                setFilmes((anteriores) => [...anteriores, criado]);
+            }
+            setEditando(null);
+        } catch (erro) {
+            setErroOperacao(`Não foi possível salvar o filme: ${erro.message}`);
+        } finally {
+            setSalvando(false);
+        }
+    }
+
+    async function removerFilme(id) {
+        setErroOperacao(null);
+
+        try {
+            await remover(id);
+            setFilmes((anteriores) => anteriores.filter((filme) => filme.id !== id));
+        } catch (erro) {
+            setErroOperacao(`Não foi possível remover o filme: ${erro.message}`);
+        }
+    }
+
     let conteudo;
     if (carregando) {
         conteudo = <p>Carregando...</p>;
@@ -90,8 +103,8 @@ export default function App() {
         conteudo = (
             <ListaFilmes
                 filmes={visiveis}
-                aoEditar={setEditando}
-                aoRemover={(id) => remover(setFilmes, id)}
+                aoEditar={abrirModal}
+                aoRemover={removerFilme}
             />
         );
     }
@@ -101,19 +114,24 @@ export default function App() {
             <Header
                 busca={busca}
                 aoBuscar={setBusca}
-                aoAdicionar={() => setEditando({})}
+                aoAdicionar={() => abrirModal({})}
             >
                 <Filtros ativo={status} aoMudar={setStatus}/>
                 <p>Exibindo {visiveis.length} de {filmes.length} filmes</p>
             </Header>
 
-            <main>{conteudo}</main>
+            <main>
+                {editando === null && erroOperacao && <p role="alert" className="erro">{erroOperacao}</p>}
+                {conteudo}
+            </main>
 
             {editando !== null && (
                 <ModalFilme
-                filme={editando}
-                aoSalvar={(dados) => salvar(editando, setFilmes, setEditando, dados)}
-                aoFechar={() => setEditando(null)}
+                    filme={editando}
+                    aoSalvar={salvar}
+                    salvando={salvando}
+                    erro={erroOperacao}
+                    aoFechar={() => abrirModal(null)}
                 />
             )}
             <Footer totalFilmes={filmes.length} />

@@ -17,8 +17,9 @@ function atualizar(setDados, campo, valor) {
   }));
 }
 
-function submeter(evento, dados, aoSalvar) {
+function submeter(evento, dados, aoSalvar, salvando) {
   evento.preventDefault();
+  if (salvando) return;
   aoSalvar({
     ...dados,
     ano: Number(dados.ano),
@@ -26,7 +27,7 @@ function submeter(evento, dados, aoSalvar) {
   });
 }
 
-export default function ModalFilme({filme, aoSalvar, aoFechar}) {
+export default function ModalFilme({ filme, aoSalvar, aoFechar, salvando, erro }) {
     const [dados, setDados] = useState({
         ...VAZIO,
         ...filme,
@@ -35,7 +36,7 @@ export default function ModalFilme({filme, aoSalvar, aoFechar}) {
     return(
         <div id="modal">
             <div className="modal-conteudo">
-                <form id="form-filme" onSubmit={(e) => submeter(e, dados, aoSalvar)} style={{ margin: 0 }}>
+                <form id="form-filme" onSubmit={(e) => submeter(e, dados, aoSalvar, salvando)} style={{ margin: 0 }}>
                     <div>
                         <h2>{filme.id ? "Editar filme" : "Adicionar filme"}</h2>
 
@@ -128,10 +129,11 @@ export default function ModalFilme({filme, aoSalvar, aoFechar}) {
                         </div>
 
                         <div className="acoes">
-                            <button type="button" id="cancelar" onClick={aoFechar}>
+                            {erro && <p role="alert" className="erro">{erro}</p>}
+                            <button type="button" id="cancelar" onClick={aoFechar} disabled={salvando}>
                             Cancelar
                             </button>
-                            <button type="submit">Salvar</button>
+                            <button type="submit" disabled={salvando}>{salvando ? "Salvando..." : "Salvar"}</button>
                         </div>
                     </div>
                 </form>
