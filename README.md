@@ -49,7 +49,7 @@ Na Parte 2 do trabalho, o CineTrack evolui de um frontend estático para uma apl
 
 ### Tecnologias Utilizadas
 - **Frontend**: React (Vite), HTML5, CSS3, JavaScript (ES6+)
-- **Backend**: Node.js, Express.js / mini-Express.js
+- **Backend**: Node.js e Express
 - **Persistência**: Arquivo JSON
 
 ## Estrutura do Repositório
@@ -81,39 +81,29 @@ cinetrack/
 Para executar a Parte 2, é necessário ter o Node.js (e o npm) instalado na máquina e rodar o servidor backend e a aplicação frontend em terminais separados.
 
 
-### 1. Backend
+### Como rodar o backend
 
-### 2. Frontend
-1. Abra um novo terminal e acesse a pasta do frontend:
-```bash
-cd frontend
-```
+Na raiz do repositório, execute:
 
-2. Instale as dependências:
 ```bash
-npm install
-```
-
-3. Inicie o servidor de desenvolvimento do Vite:
-```bash
+cd backend
+npm ci
+cp -n .env.example .env
 npm run dev
 ```
 
-4. Nesta tela no terminal clique em h + enter
+A API usa a porta 3000 por padrão. O arquivo `data/filmes.json` já contém os filmes iniciais. O comando `npm run seed` repõe esses filmes e sobrescreve os dados salvos.
+
+### Como rodar o frontend
+
+Em outro terminal, na raiz do repositório, execute:
+
 ```bash
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: use --host to expose
-  ➜  press h + enter to show help
-```
-  
-5. Nesta tela no terminal clique no que desejar (Para entrar no browser o + enter):
-```bash
-Shortcuts
-  press r + enter to restart the server
-  press u + enter to show server url
-  press o + enter to open in browser
-  press c + enter to clear console
-  press q + enter to quit
+cd frontend
+npm ci
+npm run dev
 ```
 
-6. Caso queira sair clique q + enter
+Abra [http://localhost:5173](http://localhost:5173). Se mudar o endereço do backend, defina `VITE_API_URL` no ambiente do frontend antes de iniciar o Vite.
+
+Para compilar o frontend, execute `npm run build` dentro de `frontend/`.
