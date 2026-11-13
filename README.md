@@ -88,7 +88,7 @@ Na raiz do repositório, execute:
 ```bash
 cd backend
 npm ci
-cp -n .env.example .env
+cp -n .env.example .env # No powershell do windows rode: cp .env.example .env
 npm run dev
 ```
 
