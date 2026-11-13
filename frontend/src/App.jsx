@@ -84,6 +84,7 @@ export default function App() {
     }
 
     async function removerFilme(id) {
+        if (!window.confirm("Tem certeza que deseja remover este filme?")) return;
         setErroOperacao(null);
 
         try {

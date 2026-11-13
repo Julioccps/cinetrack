@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const VAZIO = {
     titulo: "",
@@ -17,14 +17,46 @@ function atualizar(setDados, campo, valor) {
   }));
 }
 
-function submeter(evento, dados, aoSalvar, salvando) {
+function validarFilme(filme) {
+    const erros = [];
+    if (!filme.titulo) {
+        erros.push("O título do filme é obrigatório!");
+    }
+    if (!filme.genero) {
+        erros.push("O gênero do filme é obrigatório!");
+    }
+    if (!Number.isInteger(filme.ano) || filme.ano < 1888 || filme.ano > 2030) {
+        erros.push("Ano inválido!");
+    }
+    if (!["quero", "assistindo", "assistido"].includes(filme.status)) {
+        erros.push("Selecione um status válido!");
+    }
+    if (!Number.isInteger(filme.nota) || filme.nota < 1 || filme.nota > 5) {
+        erros.push("A nota deve ser um número inteiro entre 1 e 5!");
+    }
+    return { valido: erros.length === 0, erros };
+}
+
+function submeter(evento, dados, aoSalvar, salvando, setErroValidacao) {
   evento.preventDefault();
   if (salvando) return;
-  aoSalvar({
+
+  const filmeFormatado = {
     ...dados,
+    titulo: dados.titulo.trim(),
+    genero: dados.genero.trim(),
     ano: Number(dados.ano),
     nota: Number(dados.nota),
-  });
+  };
+
+  const validacao = validarFilme(filmeFormatado);
+  if (!validacao.valido) {
+    setErroValidacao(validacao.erros.join(" "));
+    return;
+  }
+
+  setErroValidacao(null);
+  aoSalvar(filmeFormatado);
 }
 
 export default function ModalFilme({ filme, aoSalvar, aoFechar, salvando, erro }) {
@@ -32,11 +64,24 @@ export default function ModalFilme({ filme, aoSalvar, aoFechar, salvando, erro }
         ...VAZIO,
         ...filme,
     });
+    const [erroValidacao, setErroValidacao] = useState(null);
+
+    useEffect(() => {
+        function aoPressionarTecla(e) {
+            if (e.key === "Escape" && !salvando) {
+                aoFechar();
+            }
+        }
+        document.addEventListener("keydown", aoPressionarTecla);
+        return () => document.removeEventListener("keydown", aoPressionarTecla);
+    }, [aoFechar, salvando]);
+
+    const mensagemErro = erroValidacao || erro;
 
     return(
         <div id="modal">
             <div className="modal-conteudo">
-                <form id="form-filme" onSubmit={(e) => submeter(e, dados, aoSalvar, salvando)} style={{ margin: 0 }}>
+                <form id="form-filme" onSubmit={(e) => submeter(e, dados, aoSalvar, salvando, setErroValidacao)} style={{ margin: 0 }}>
                     <div>
                         <h2>{filme.id ? "Editar filme" : "Adicionar filme"}</h2>
 
@@ -129,7 +174,7 @@ export default function ModalFilme({ filme, aoSalvar, aoFechar, salvando, erro }
                         </div>
 
                         <div className="acoes">
-                            {erro && <p role="alert" className="erro">{erro}</p>}
+                            {mensagemErro && <p role="alert" className="erro">{mensagemErro}</p>}
                             <button type="button" id="cancelar" onClick={aoFechar} disabled={salvando}>
                             Cancelar
                             </button>
