@@ -5,7 +5,7 @@ async function pedir(caminho, opcoes) {
 
     if (!resposta.ok) {
         const dados = await resposta.json().catch(() => null);
-        throw new Error(dados?.erro || `HTTP ${resposta.status}`);
+        throw new Error(dados?.erros?.join("; ") || dados?.erro || `HTTP ${resposta.status}`);
     }
 
     return resposta.status === 204 ? null : resposta.json();
