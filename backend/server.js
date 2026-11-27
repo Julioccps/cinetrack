@@ -36,7 +36,24 @@ app.get("/filmes", (req, res) => {
         lista = lista.filter((filme) => filme.status === req.query.status);
     }
 
+    if (typeof req.query.q === "string" && req.query.q) {
+        const busca = req.query.q.toLowerCase();
+        lista = lista.filter((filme) => filme.titulo.toLowerCase().includes(busca));
+    }
+
     res.json(lista);
+});
+
+app.get("/stats", (req, res) => {
+    const filmes = lerFilmes();
+    const porStatus = filmes.reduce((contagem, filme) => {
+        contagem[filme.status] = (contagem[filme.status] || 0) + 1;
+        return contagem;
+    }, { assistido: 0, assistindo: 0, quero: 0 });
+    const somaNotas = filmes.reduce((soma, filme) => soma + filme.nota, 0);
+    const mediaNotas = filmes.length ? Number((somaNotas / filmes.length).toFixed(1)) : 0;
+
+    res.json({ total: filmes.length, porStatus, mediaNotas });
 });
 
 app.get("/filmes/:id", (req, res) => {
