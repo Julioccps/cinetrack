@@ -23,10 +23,14 @@ function gerarId(lista) {
     return Math.max(0, ...lista.map((filme) => filme.id)) + 1;
 }
 
-function dadosValidos(dados) {
-    return dados && typeof dados.titulo === "string" &&
-        dados.titulo.trim().length > 0 &&
-        Number.isInteger(dados.ano) && dados.ano > 0;
+function validarFilme(dados = {}) {
+    const erros = [];
+    if (typeof dados.titulo !== "string" || !dados.titulo.trim()) erros.push("título é obrigatório");
+    if (!Number.isInteger(dados.ano) || dados.ano < 1888 || dados.ano > 2030) erros.push("ano deve estar entre 1888 e 2030");
+    if (typeof dados.genero !== "string" || !dados.genero.trim()) erros.push("gênero é obrigatório");
+    if (!Number.isInteger(dados.nota) || dados.nota < 1 || dados.nota > 5) erros.push("nota deve estar entre 1 e 5");
+    if (!["assistido", "assistindo", "quero"].includes(dados.status)) erros.push("status deve ser assistido, assistindo ou quero");
+    return erros;
 }
 
 app.get("/filmes", (req, res) => {
@@ -68,9 +72,8 @@ app.get("/filmes/:id", (req, res) => {
 });
 
 app.post("/filmes", (req, res) => {
-    if (!dadosValidos(req.body)) {
-        return res.status(400).json({ erro: "Título e ano válidos são obrigatórios" });
-    }
+    const erros = validarFilme(req.body || {});
+    if (erros.length) return res.status(400).json({ erros });
 
     const lista = lerFilmes();
     const novo = { ...req.body, id: gerarId(lista) };
@@ -89,9 +92,8 @@ app.put("/filmes/:id", (req, res) => {
     }
 
     const atualizado = { ...lista[indice], ...req.body, id };
-    if (!dadosValidos(atualizado)) {
-        return res.status(400).json({ erro: "Título e ano válidos são obrigatórios" });
-    }
+    const erros = validarFilme(atualizado);
+    if (erros.length) return res.status(400).json({ erros });
 
     lista[indice] = atualizado;
     salvarFilmes(lista);

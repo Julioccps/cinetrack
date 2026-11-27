@@ -78,7 +78,7 @@ cinetrack/
 ```
 
 ## Instruções para Executar o Projeto
-Para executar a Parte 2, é necessário ter o Node.js (e o npm) instalado na máquina e rodar o servidor backend e a aplicação frontend em terminais separados.
+Para executar a Parte 2, instale Node.js e npm (o projeto foi verificado com Node 26) e rode backend e frontend em terminais separados. Clone o repositório e entre em sua pasta antes dos passos abaixo.
 
 
 ### Como rodar o backend
@@ -89,6 +89,7 @@ Na raiz do repositório, execute:
 cd backend
 npm ci
 cp .env.example .env
+node seed.js
 npm run dev
 ```
 
@@ -107,3 +108,5 @@ npm run dev
 Abra [http://localhost:5173](http://localhost:5173). Se mudar o endereço do backend, defina `VITE_API_URL` no ambiente do frontend antes de iniciar o Vite.
 
 Para compilar o frontend, execute `npm run build` dentro de `frontend/`.
+
+A documentação das rotas está em [docs/api.md](docs/api.md), e os resultados e limitações dos testes estão em [docs/testes-parte2.md](docs/testes-parte2.md).
